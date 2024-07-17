@@ -11,16 +11,9 @@
 #include "WProgram.h"
 #endif
 
-#include <PID_v1.h>
-double heading_error(double bearing, double current_heading)
-{
-   double error = current_heading - bearing;
-   if (error > 180)
-      error -= 360;
-   if (error < -180)
-      error += 360;
-   return error;
-}
+#include "PID_v1.h"
+#include "utils/utils.hpp"
+
 /*Constructor (...)*********************************************************
  *    The parameters specified here are those for for which we can't set up
  *    reliable defaults, so we need to have the user set them.
