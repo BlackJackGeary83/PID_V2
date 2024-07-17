@@ -11,8 +11,8 @@
 #include "WProgram.h"
 #endif
 
-#include "PID_v2.hpp"
-#include "utils/utils.hpp"
+#include "PID_v2.h"
+#include "utils.hpp"
 
 /*Constructor (...)*********************************************************
  *    The parameters specified here are those for for which we can't set up
