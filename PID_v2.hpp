@@ -88,27 +88,27 @@ public:
    * where it's important to know what is actually
    * inside the PID.
    */
-  double GetKp();
-  double GetKi();
-  double GetKd();
-  int GetMode();
-  int GetDirection();
+  inline double GetKp() const;
+  inline double GetKi() const;
+  inline double GetKd() const;
+  inline int GetMode() const;
+  inline int GetDirection() const;
 
 private:
   void Initialize();
 
   // we'll hold on to the tuning parameters in user-entered
   // format for display purposes
-  double dispKp;
-  double dispKi;
-  double dispKd;
+  double m_dispKp;
+  double m_dispKi;
+  double m_dispKd;
 
-  double kp; // * (P)roportional Tuning Parameter
-  double ki; // * (I)ntegral Tuning Parameter
-  double kd; // * (D)erivative Tuning Parameter
+  double m_kp; // * (P)roportional Tuning Parameter
+  double m_ki; // * (I)ntegral Tuning Parameter
+  double m_kd; // * (D)erivative Tuning Parameter
 
-  int controllerDirection;
-  int pOn;
+  int m_controllerDirection;
+  int m_pOn;
 
   /*
    * Pointers to the Input, Output, and Setpoint variables
@@ -116,17 +116,38 @@ private:
    * PID, freeing the user from having to constantly tell us
    * what these values are.  with pointers we'll just know.
    */
-  double *myInput;
-  double *myOutput;
-  double *mySetpoint;
+  double* m_myInput;
+  double* m_myOutput;
+  double* m_mySetpoint;
 
-  unsigned long lastTime;
-  double outputSum, lastInput;
+  unsigned long m_lastTime;
+  double m_outputSum, m_lastInput;
 
-  unsigned long SampleTime;
-  double outMin, outMax;
-  bool inAuto, pOnE;
+  unsigned long m_sampleTime;
+  double m_outMin, m_outMax;
+  bool m_inAuto, m_pOnE;
 
 };
+
+/* Status Funcions*************************************************************
+ * Just because you set the Kp=-1 doesn't mean it actually happened.  these
+ * functions query the internal state of the PID.  they're here for display
+ * purposes.  this are the functions the PID Front-end uses for example
+ ******************************************************************************/
+double PID::GetKp() const {
+    return m_dispKp;
+}
+double PID::GetKi() const {
+    return m_dispKi;
+}
+double PID::GetKd() const {
+    return m_dispKd;
+}
+int PID::GetMode() const {
+    return m_inAuto ? AUTOMATIC : MANUAL;
+}
+int PID::GetDirection() const {
+    return m_controllerDirection;
+}
 
 #endif // PID_v2_hpp
