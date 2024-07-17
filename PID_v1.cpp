@@ -1,5 +1,5 @@
 /**********************************************************************************************
- * Arduino PID Library - Version 1.2.1
+ * Arduino PID Library - Version 2.0.0
  * by Robin Perdreau
  *
  * This Library is licensed under the MIT License
