@@ -18,12 +18,12 @@
  *    The parameters specified here are those for for which we can't set up
  *    reliable defaults, so we need to have the user set them.
  ***************************************************************************/
-PID::PID(double* Input, double* Output, double* Setpoint,
-         double Kp, double Ki, double Kd, int POn, int ControllerDirection) {
+PID::PID(double* input, double* output, double* setpoint,
+         double kp, double ki, double kd, int pOn, int controllerDirection) {
 
-   m_myOutput = Output;
-   m_myInput = Input;
-   m_mySetpoint = Setpoint;
+   m_myOutput = output;
+   m_myInput = input;
+   m_mySetpoint = setpoint;
    m_inAuto = false;
 
    // default output limit corresponds to the arduino pwm limits
@@ -32,8 +32,8 @@ PID::PID(double* Input, double* Output, double* Setpoint,
    // default Controller Sample Time is 0.1 seconds
    m_sampleTime = 100; 
 
-   PID::SetControllerDirection(ControllerDirection);
-   PID::SetTunings(Kp, Ki, Kd, POn);
+   PID::SetControllerDirection(controllerDirection);
+   PID::SetTunings(kp, ki, kd, pOn);
 
    m_lastTime = millis() - m_sampleTime;
 }
@@ -42,9 +42,9 @@ PID::PID(double* Input, double* Output, double* Setpoint,
  *    To allow backwards compatability for v1.1, or for people that just want
  *    to use Proportional on Error without explicitly saying so
  ***************************************************************************/
-PID::PID(double* Input, double* Output, double* Setpoint,
-         double Kp, double Ki, double Kd, int ControllerDirection)
-    : PID::PID(Input, Output, Setpoint, Kp, Ki, Kd, P_ON_E, ControllerDirection) {}
+PID::PID(double* input, double* output, double* setpoint,
+         double kp, double ki, double kd, int controllerDirection)
+    : PID::PID(input, output, setpoint, kp, ki, kd, P_ON_E, controllerDirection) {}
 
 /* WrapCompute() **********************************************************************
  *     This, as they say, is where the magic happens.  this function should be called
@@ -161,21 +161,21 @@ bool PID::Compute() {
  * it's called automatically from the constructor, but tunings can also
  * be adjusted on the fly during normal operation
  ******************************************************************************/
-void PID::SetTunings(double Kp, double Ki, double Kd, int POn) {
-   if (Kp < 0 || Ki < 0 || Kd < 0)
+void PID::SetTunings(double kp, double ki, double kd, int pOn) {
+   if (kp < 0 || ki < 0 || kd < 0)
       return;
 
-   m_pOn = POn;
-   m_pOnE = POn == P_ON_E;
+   m_pOn = pOn;
+   m_pOnE = pOn == P_ON_E;
 
-   m_dispKp = Kp;
-   m_dispKi = Ki;
-   m_dispKd = Kd;
+   m_dispKp = kp;
+   m_dispKi = ki;
+   m_dispKd = kd;
 
    double SampleTimeInSec = m_sampleTime / 1000.0;
-   m_kp = Kp;
-   m_ki = Ki * SampleTimeInSec;
-   m_kd = Kd / SampleTimeInSec;
+   m_kp = kp;
+   m_ki = ki * SampleTimeInSec;
+   m_kd = kd / SampleTimeInSec;
 
    if (m_controllerDirection == REVERSE) {
       m_kp = (0 - m_kp);
@@ -187,20 +187,20 @@ void PID::SetTunings(double Kp, double Ki, double Kd, int POn) {
 /* SetTunings(...)*************************************************************
  * Set Tunings using the last-rembered POn setting
  ******************************************************************************/
-void PID::SetTunings(double Kp, double Ki, double Kd) {
-   SetTunings(Kp, Ki, Kd, m_pOn);
+void PID::SetTunings(double kp, double ki, double kd) {
+   SetTunings(kp, ki, kd, m_pOn);
 }
 
 /* SetSampleTime(...) *********************************************************
  * sets the period, in Milliseconds, at which the calculation is performed
  ******************************************************************************/
 // why the fuck is this an int ?
-void PID::SetSampleTime(int NewSampleTime) {
-   if (NewSampleTime > 0) {
-      double ratio = (double) NewSampleTime / m_sampleTime;
+void PID::SetSampleTime(int newSampleTime) {
+   if (newSampleTime > 0) {
+      double ratio = (double) newSampleTime / m_sampleTime;
       m_ki *= ratio;
       m_kd /= ratio;
-      m_sampleTime = NewSampleTime;
+      m_sampleTime = newSampleTime;
    }
 }
 
@@ -212,11 +212,11 @@ void PID::SetSampleTime(int NewSampleTime) {
  *  want to clamp it from 0-125.  who knows.  at any rate, that can all be done
  *  here.
  **************************************************************************/
-void PID::SetOutputLimits(double Min, double Max) {
-   if (Min >= Max)
+void PID::SetOutputLimits(double min, double max) {
+   if (min >= max)
       return;
-   m_outMin = Min;
-   m_outMax = Max;
+   m_outMin = min;
+   m_outMax = max;
 
    if (m_inAuto) {
       if (*m_myOutput > m_outMax)
@@ -236,8 +236,8 @@ void PID::SetOutputLimits(double Min, double Max) {
  * when the transition from manual to auto occurs, the controller is
  * automatically initialized
  ******************************************************************************/
-void PID::SetMode(int Mode) {
-   bool newAuto = (Mode == AUTOMATIC);
+void PID::SetMode(int mode) {
+   bool newAuto = (mode == AUTOMATIC);
    if (newAuto && !m_inAuto) {
       // we just went from manual to auto
       PID::Initialize();
@@ -264,11 +264,11 @@ void PID::Initialize() {
  * know which one, because otherwise we may increase the output when we should
  * be decreasing.  This is called from the constructor.
  ******************************************************************************/
-void PID::SetControllerDirection(int Direction) {
-   if (m_inAuto && Direction != m_controllerDirection) {
+void PID::SetControllerDirection(int direction) {
+   if (m_inAuto && direction != m_controllerDirection) {
       m_kp = (0 - m_kp);
       m_ki = (0 - m_ki);
       m_kd = (0 - m_kd);
    }
-   m_controllerDirection = Direction;
+   m_controllerDirection = direction;
 }
