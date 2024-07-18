@@ -3,7 +3,7 @@
  * Reading analog input 0 to control analog PWM output 3
  ********************************************************/
 
-#include <PID_v1.h>
+#include <PID_v2.h>
 
 #define PIN_INPUT 0
 #define PIN_OUTPUT 3
@@ -31,5 +31,3 @@ void loop()
   myPID.Compute();
   analogWrite(PIN_OUTPUT, Output);
 }
-
-

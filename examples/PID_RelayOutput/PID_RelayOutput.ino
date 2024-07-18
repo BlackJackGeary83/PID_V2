@@ -14,7 +14,7 @@
  * window being "Relay Off Time"
  ********************************************************/
 
-#include <PID_v1.h>
+#include <PID_v2.h>
 
 #define PIN_INPUT 0
 #define RELAY_PIN 6
@@ -59,6 +59,3 @@ void loop()
   else digitalWrite(RELAY_PIN, LOW);
 
 }
-
-
-
