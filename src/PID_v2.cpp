@@ -97,7 +97,7 @@ bool PID::WrapCompute() {
  *   pid Output needs to be computed.  returns true when the output is computed,
  *   false when nothing has been done.
  **********************************************************************************/
-bool PID::Compute() {
+bool PID::Compute(bool doWrap) {
     if (!m_inAuto)
         return false;
 
@@ -107,7 +107,12 @@ bool PID::Compute() {
     if (timeChange >= m_sampleTime) {
         /* Compute all the working error variables */
         double input = *m_myInput;
-        double error = *m_mySetpoint - input;
+        if (doWrap) {
+            double error = heading_error(*m_mySetpoint, input);
+        } else {
+            double error = *m_mySetpoint - input;
+        }
+
         double dInput = (input - m_lastInput);
         m_outputSum += (m_ki * error);
 

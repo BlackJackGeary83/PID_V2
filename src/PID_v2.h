@@ -44,7 +44,7 @@ public:
      * calculation frequency can be set using SetMode
      * SetSampleTime respectively
      */
-    bool Compute();
+    bool Compute(bool doWrap = false);
 
     /*
      * Clamps the output to a specific range. 0-255 by default, but
