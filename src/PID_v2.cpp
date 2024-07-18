@@ -19,18 +19,8 @@
  *    reliable defaults, so we need to have the user set them.
  ***************************************************************************/
 PID::PID(double* input, double* output, double* setpoint,
-         double kp, double ki, double kd, int pOn, int controllerDirection) {
-
-   m_myOutput = output;
-   m_myInput = input;
-   m_mySetpoint = setpoint;
-   m_inAuto = false;
-
-   // default output limit corresponds to the arduino pwm limits
-   PID::SetOutputLimits(0, 255);
-
-   // default Controller Sample Time is 0.1 seconds
-   m_sampleTime = 100; 
+         double kp, double ki, double kd, int pOn, int controllerDirection) 
+    : m_myInput{input}, m_myOutput{output}, m_mySetpoint{setpoint} {
 
    PID::SetControllerDirection(controllerDirection);
    PID::SetTunings(kp, ki, kd, pOn);

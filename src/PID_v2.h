@@ -123,9 +123,11 @@ private:
   unsigned long m_lastTime;
   double m_outputSum, m_lastInput;
 
-  unsigned long m_sampleTime;
-  double m_outMin, m_outMax;
-  bool m_inAuto, m_pOnE;
+  // default Controller Sample Time is 0.1 seconds
+  unsigned long m_sampleTime{100};
+  // default output limit corresponds to the arduino pwm limits
+  double m_outMin{0}, m_outMax{255};
+  bool m_inAuto{false}, m_pOnE;
 
 };
 
